@@ -4,38 +4,52 @@ import json
 class Prequest():
 
 	PARENT_API_URL = "https://t4oqhh4fk6.execute-api.us-east-1.amazonaws.com/beta?url={}?returnS3Url={}"
-
 	# def __init__(self): 
 		# with open('config.json') as json_data_file:
 		# 	self.data = json.load(json_data_file)
 
 	def get(self,url):
 
+		#Fetch from data source as a default
 		response = requests.get(url)
 		print(self.PARENT_API_URL)
-	
+		cache_response = []
+
 		if(response.status_code == 200):
 			#everything went through
 			#check if data is cached online, Fetch API. 
-			check_cache_response = requests.get(self.PARENT_API_URL.format(url, False))
+			#Pass returnS3Url as False, implies we dont care for any url to be returned. We just want to check existence
+			
+			cache_response = requests.get(self.PARENT_API_URL.format(url, False))
+			print("Everything went OK. Checking S3 for pre existing cache")
+			print(cache_response.status_code)
+			cache_response =  cache_response.json()
+			if(cache_response.status_code != 200):
+				#create a cache, call writeData
+				requests.post(self.PARENT_API_URL+url)
+				#else let it be. A cache already exists for this dataset.
 
-
-			print("cache_response.....")
-			print(cache_response.json())
-			#create a cache if needed, Write API
-			# requests.post(self.PARENT_API_URL+url)
 			return response
 		else:
 			#Errors 404,400,500, and so on...
-			#can write sub cases if need be
-			requests.get(self.PARENT_API_URL.format(url, True))
-			
-			#check if S3 bucket has this data cached, if so, return the cached dataset
+			#Now we need to request S3 url from the cache and proceed to GET it ourselves.
 			#Call the "Fetch API" of AWS
+			#Pass returnS3Url as True, implies we care for a url to be returned. 
 
+			cache_response = requests.get(self.PARENT_API_URL.format(url, True))
+			cache_response =  cache_response.json()
+			print("Original data not found. Checking S3 for pre existing cache")
+			print(cache_response.json())
 
-			#If not, assume data was never cached. This is the first request; and the data is unavailable. Send back response as is.
-			return response
+			if(cache_response.status_code !=200):		
+				#If not, assume data was never cached. This is the first request; and the data is unavailable. Send back response as is.
+				print("Oops! S3 does not have a cache for your data.")
+				return response
+			else:
+				#proceed to download actual data from S3 url
+				print("S3 catch found for your data. Downloading...")
+				actual_data = requests.get(cache_response.url)
+				return actual_data
 
 
 
@@ -43,9 +57,9 @@ class Prequest():
 
 #Sample call
 pq = Prequest()
-# response =  pq.get("https://data.boston.gov/export/296/8e2/2968e2c0-d479-49ba-a884-4ef523ada3c0.json");
-response = pq.get("https://data.boston.gov/export/f12/3e6/f123e65d-dc0e-4c83-9348-ed46fec498c0.tsv");
-print(response)
+#Does not exist yet.
+response =  pq.get("https://data.boston.gov/export/35f/ad2/35fad26c-1400-46b0-846c-3bb6ca8f74d0.json");
+response = pq.get(url);
 
 ####Alternative approach#####
 # class Prequest(requests.request):
