@@ -16,6 +16,7 @@ class Prequest(Session):
         :param params: (optional) Dictionary or bytes to be sent in the query string for the Request.
         :param kwargs: Optional arguments that request takes.
         :return: Response object
+        :rtype: requests.Response
         """
 
         # Default behaviour for all methods that are not GET

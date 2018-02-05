@@ -5,8 +5,8 @@ from codecs import open
 version = '0.0.0'
 with open('prequest/__init__.py') as f:
     for line in f:
-        if line.find("__version__") >= 0:
-            version = line.split("=")[1].strip().strip('"').strip("'")
+        if line.find('__version__') >= 0:
+            version = line.split('=')[1].strip().strip('"').strip("'")
             break
 
 # Retrieve dependencies
@@ -34,8 +34,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
