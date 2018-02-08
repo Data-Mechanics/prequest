@@ -29,7 +29,7 @@ setup(
     url='https://github.com/Data-Mechanics/prequest',
     packages=['prequest'],
     install_requires=reqs,
-    test_reqs=test_reqs,
+    tests_require=test_reqs,
     test_suite='nose.collector',
     license='MIT',
     classifiers=(
