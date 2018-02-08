@@ -12,8 +12,10 @@ with open('prequest/__init__.py') as f:
 # Retrieve dependencies
 with open('requirements.txt', 'r') as f:
     reqs = f.readlines()
+with open('test-requirements.txt', 'r') as f:
+    test_reqs = f.readlines()
 
-# Retrieve dependencies
+# Retrieve readme
 with open('README.rst', 'r') as f:
     long_desc = f.read()
 
@@ -27,6 +29,8 @@ setup(
     url='https://github.com/Data-Mechanics/prequest',
     packages=['prequest'],
     install_requires=reqs,
+    test_reqs=test_reqs,
+    test_suite='nose.collector',
     license='MIT',
     classifiers=(
         'Development Status :: 3 - Alpha',
