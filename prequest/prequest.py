@@ -27,26 +27,19 @@ class Prequest(Session):
         resp = super().request('GET', url, params, **kwargs)
 
         if resp.status_code == 200:
-            print('Everything went OK. Checking S3 for pre existing cache')
-
             # Let Lambda cache file if necessary
             # We do not care about the response
-            cache_response = super().request('GET', self.PARENT_API_URL.format(url, False))
-            print('cache response status code: {}'.format(cache_response.status_code))
+            super().request('GET', self.PARENT_API_URL.format(url, False))
 
             return resp
         else:
-            # The original file is no longer available online, check the cache
-
-            print('Original data not found. Checking S3 for pre existing cache')
-
+            # The original file is no longer available online
             # Get the S3 URL from the cache, this time we do care about the response
             cache_response = super().request('GET', self.PARENT_API_URL.format(url, True))
-            cache_response = cache_response.json()
 
             # If cache response is 200, return cached data.
             if cache_response.status_code == 200:
-                return super().request('GET', cache_response.url)
+                return super().request('GET', cache_response.json()['url'])
             else:
                 # If not, implies cache was never created in the first place.
                 # Return original response and let user handle it
