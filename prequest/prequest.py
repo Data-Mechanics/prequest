@@ -4,7 +4,7 @@ from typing import Dict
 
 
 class Prequest(Session):
-    PARENT_API_URL = "https://t4oqhh4fk6.execute-api.us-east-1.amazonaws.com/beta?url={}?returnS3Url={}"
+    PARENT_API_URL = "https://t4oqhh4fk6.execute-api.us-east-1.amazonaws.com/beta?url={}&returnS3Url={}"
 
     def request(self, method: str, url: str, params: Dict = None, **kwargs) -> Response:
         """
