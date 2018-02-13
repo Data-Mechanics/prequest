@@ -2,7 +2,7 @@ from .prequest import Prequest
 from requests import Response
 from typing import Dict
 
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 
 
 def get(url: str, **kwargs) -> Response:
