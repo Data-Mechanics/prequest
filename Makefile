@@ -11,6 +11,6 @@ test:
 publish:
 	pip install 'twine>=1.5.0'
 	pip install wheel
-	twine upload dist/*
 	python setup.py sdist bdist_wheel
+	twine upload dist/*
 	rm -fr build dist .egg requests.egg-info
